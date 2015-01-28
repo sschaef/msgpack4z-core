@@ -18,13 +18,15 @@ object build extends Build {
       ("com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.2" % "provided") ::
       ("org.typelevel" %% "shapeless-scalaz" % shapelessContrib % "test") ::
       ("org.typelevel" %% "shapeless-scalacheck" % shapelessContrib % "test") ::
-      ("com.github.xuwei-k" % "msgpack4z-java07" % "0.1.2" % "test") ::
+      ("com.github.xuwei-k" % "msgpack4z-java07" % "0.1.2" % "test").exclude("org.msgpack", "msgpack-core") ::
       ("com.github.xuwei-k" % "msgpack4z-java06" % "0.1.0" % "test") ::
       ("com.github.xuwei-k" %% "msgpack4z-native" % "0.1.0" % "test") ::
       Nil
     )
   ).settings(
     Sxr.subProjectSxr(Compile, "classes.sxr"): _*
+  ).dependsOn(
+    ProjectRef(uri("git://github.com/msgpack/msgpack-java.git#5cf58df8aaffcf3e65ec0e24cde8caeab21cb3a5"), "msgpack-core")
   )
 
 }
