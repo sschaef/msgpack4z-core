@@ -13,14 +13,14 @@ object build extends Build {
       ("com.github.xuwei-k" % "msgpack4z-api" % "0.1.0") ::
       ("org.scalaz" %% "scalaz-core" % Common.ScalazVersion) ::
       ("com.github.xuwei-k" %% "zeroapply-scalaz" % "0.1.2" % "provided") ::
-      ("com.github.xuwei-k" % "msgpack4z-java07" % "0.1.3" % "test").exclude("org.msgpack", "msgpack-core") ::
-      ("org.msgpack" % "msgpack-core" % "0.7.0-p9" % "test") ::
       ("com.github.xuwei-k" % "msgpack4z-java06" % "0.1.1" % "test") ::
       ("com.github.xuwei-k" %% "msgpack4z-native" % "0.1.0" % "test") ::
       Nil
     )
   ).settings(
     Sxr.subProjectSxr(Compile, "classes.sxr"): _*
+  ).dependsOn(
+    ProjectRef(uri("git://github.com/msgpack4z/msgpack4z-java07.git#2471b12bb39e"), "msgpack4z-java07")
   )
 
 }

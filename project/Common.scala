@@ -1,8 +1,5 @@
 import sbt._, Keys._
 import xerial.sbt.Sonatype._
-import sbtrelease._
-import sbtrelease.ReleasePlugin.autoImport._
-import ReleaseStateTransformations._
 import com.typesafe.sbt.pgp.PgpKeys
 import sbtbuildinfo.Plugin._
 import scalaprops.ScalapropsPlugin.autoImport._
@@ -22,7 +19,6 @@ object Common {
   )
 
   val settings = Seq(
-    ReleasePlugin.extraReleaseCommands,
     sonatypeSettings,
     scalapropsWithScalazlaws,
     buildInfoSettings
@@ -43,29 +39,6 @@ object Common {
     buildInfoPackage := "msgpack4z",
     buildInfoObject := "BuildInfoMsgpack4zCore",
     sourceGenerators in Compile <+= buildInfo,
-    commands += Command.command("updateReadme")(UpdateReadme.updateReadmeTask),
-    releaseProcess := Seq[ReleaseStep](
-      ReleaseStep{ state =>
-        assert(Sxr.disableSxr == false)
-        state
-      },
-      checkSnapshotDependencies,
-      inquireVersions,
-      runClean,
-      runTest,
-      setReleaseVersion,
-      commitReleaseVersion,
-      UpdateReadme.updateReadmeProcess,
-      tagRelease,
-      ReleaseStep(state => Project.extract(state).runTask(PgpKeys.publishSigned, state)._1),
-      setNextVersion,
-      commitNextVersion,
-      ReleaseStep(state =>
-        Project.extract(state).runTask(SonatypeKeys.sonatypeReleaseAll, state)._1
-      ),
-      UpdateReadme.updateReadmeProcess,
-      pushChanges
-    ),
     credentials ++= PartialFunction.condOpt(sys.env.get("SONATYPE_USER") -> sys.env.get("SONATYPE_PASS")){
       case (Some(user), Some(pass)) =>
         Credentials("Sonatype Nexus Repository Manager", "oss.sonatype.org", user, pass)
