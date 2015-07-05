@@ -331,6 +331,18 @@ final case class MsgpackULong private[msgpack4z](value: BigInteger) extends Msgp
 final case class MsgpackDouble private[msgpack4z](value: Double) extends MsgpackUnion {
   override protected[msgpack4z] def pack(packer: MsgPacker): Unit =
     packer.packDouble(value)
+  override def equals(other: Any): Boolean = other match {
+    case that: AnyRef if this eq that =>
+      true
+    case MsgpackDouble(that) =>
+      if (value.isNaN && that.isNaN){
+        true
+      }else{
+        value == that
+      }
+    case _ =>
+      false
+  }
 }
 
 object MsgpackDouble extends (Double => MsgpackUnion)
